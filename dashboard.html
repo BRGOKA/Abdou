@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medical Dashboard</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="newcss.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#512da8',
+            secondary: '#38bdf8',
+          },
+          animation: {
+            'gradient': 'gradient 8s linear infinite',
+          },
+          keyframes: {
+            gradient: {
+              '0%, 100%': {
+                'background-size': '200% 200%',
+                'background-position': 'left center'
+              },
+              '50%': {
+                'background-size': '200% 200%',
+                'background-position': 'right center'
+              },
+            },
+          },
+        },
+      },
+    }
+  </script>
+
+  <style>
+    /* Custom styles that complement Tailwind */
+    .chart-box canvas {
+      width: 250px !important;
+      height: 250px !important;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <!-- Sidebar -->
+  <div class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg transition-transform duration-300 transform z-50">
+    <a href="#" class="flex items-center p-4 bg-primary bg-gradient-to-r from-primary to-secondary text-white">
+      <i class="bx bx-plus-medical text-2xl"></i>
+      <div class="ml-3 text-xl font-semibold">Medical</div>
+    </a>
+    <ul class="py-4">
+      <li class="px-4 py-2">
+        <a href="#" class="flex items-center text-gray-700 hover:text-primary transition-colors">
+          <i class="bx bxs-dashboard text-xl"></i>
+          <span class="ml-3">Dashboard</span>
+        </a>
+      </li>
+      <li class="px-4 py-2">
+        <a href="patient-list.html" class="flex items-center text-gray-700 hover:text-primary transition-colors">
+          <i class="bx bx-user text-xl"></i>
+          <span class="ml-3">Patients</span>
+        </a>
+      </li>
+      <li class="px-4 py-2">
+        <a href="liste de lit.html" class="flex items-center text-gray-700 hover:text-primary transition-colors">
+          <i class="bx bx-bed text-xl"></i>
+          <span class="ml-3">Liste des lits</span>
+        </a>
+      </li>
+      <li class="px-4 py-2">
+        <a href="liste de service.html" class="flex items-center text-gray-700 hover:text-primary transition-colors">
+          <i class="bx bx-plus-medical text-xl"></i>
+          <span class="ml-3">Services</span>
+        </a>
+      </li>
+    </ul>
+    <div class="absolute bottom-0 w-full p-4 border-t">
+      <a href="index.html" class="flex items-center text-gray-700 hover:text-red-500 transition-colors">
+        <i class="bx bx-log-out text-xl"></i>
+        <span class="ml-3">Déconnexion</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="ml-64 min-h-screen bg-gray-100">
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center">
+           
+          </div>
+          <div class="flex-1 max-w-xs ml-4">
+            <div class="relative">
+              <input type="search" placeholder="Rechercher..." class="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:border-primary" />
+              <div class="absolute left-3 top-2.5 text-gray-400">
+                <i class="bx bx-search text-xl"></i>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center">
+            <button class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors">
+              <i class="bx bx-moon text-xl"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div class="flex items-center justify-between mb-8">
+        <h1 class="text-2xl font-bold text-gray-900">Tableau de bord</h1>
+      </div>
+
+      <!-- Insights -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+              <i class="bx bx-user text-2xl"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-sm font-medium text-gray-500">Patients</h3>
+              <p class="text-xl font-semibold text-gray-900" id="totalPatients">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-green-100 text-green-600">
+              <i class="bx bx-bed text-2xl"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-sm font-medium text-gray-500">Lits disponibles</h3>
+              <p class="text-xl font-semibold text-gray-900" id="availableBeds">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+              <i class="bx bx-plus-medical text-2xl"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-sm font-medium text-gray-500">Services</h3>
+              <p class="text-xl font-semibold text-gray-900" id="totalServices">0</p>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+              <i class="bx bx-time text-2xl"></i>
+            </div>
+            <div class="ml-4">
+              <h3 class="text-sm font-medium text-gray-500">En attente</h3>
+              <p class="text-xl font-semibold text-gray-900" id="pendingPatients">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 text-center">Nombre de patients par service</h3>
+          <div class="relative">
+            <canvas id="barChart" class="mx-auto"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 text-center">Répartition des lits</h3>
+          <div class="relative">
+            <canvas id="pieChart" class="mx-auto"></canvas>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Initialize statistics
+    let patients = [];
+    let beds = [];
+    let services = [];
+
+    // Update dashboard statistics
+    function updateDashboardStats() {
+      // Get statistics from localStorage or set defaults
+      const stats = {
+        totalPatients: patients.length,
+        availableBeds: beds.filter(bed => !bed.occupied).length,
+        totalServices: services.length,
+        pendingPatients: patients.filter(p => p.status === 'pending').length
+      };
+
+      // Update UI
+      document.getElementById('totalPatients').textContent = stats.totalPatients;
+      document.getElementById('availableBeds').textContent = stats.availableBeds;
+      document.getElementById('totalServices').textContent = stats.totalServices;
+      document.getElementById('pendingPatients').textContent = stats.pendingPatients;
+    }
+
+    // Load data from localStorage
+    function loadData() {
+      patients = JSON.parse(localStorage.getItem('patients') || '[]');
+      beds = JSON.parse(localStorage.getItem('beds') || '[]');
+      services = JSON.parse(localStorage.getItem('services') || '[]');
+      updateDashboardStats();
+      updateCharts();
+    }
+
+    // Update charts with real data
+    function updateCharts() {
+      // Update bar chart data
+      const serviceStats = services.reduce((acc, service) => {
+        acc[service.name] = patients.filter(p => p.service === service.name).length;
+        return acc;
+      }, {});
+
+      barChart.data.labels = Object.keys(serviceStats);
+      barChart.data.datasets[0].data = Object.values(serviceStats);
+      barChart.update();
+
+      // Update pie chart data
+      const bedStats = {
+        occupied: beds.filter(bed => bed.occupied).length,
+        available: beds.filter(bed => !bed.occupied).length
+      };
+
+      pieChart.data.datasets[0].data = [bedStats.occupied, bedStats.available];
+      pieChart.update();
+    }
+
+    // Load initial data
+    loadData();
+
+    // Bar Chart
+    const barCtx = document.getElementById('barChart');
+    const barChart = 
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Cardio', 'Pédiatrie', 'Chirurgie', 'Dermato'],
+        datasets: [{
+          label: 'Patients',
+          data: [45, 30, 60, 20],
+          backgroundColor: '#38bdf8',
+          borderRadius: 8,
+          borderWidth: 0,
+          hoverBackgroundColor: '#0ea5e9'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          duration: 1000,
+          easing: 'easeInOutQuart'
+        },
+        plugins: {
+          legend: {
+            display: false
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              display: true,
+              color: '#f1f5f9'
+            },
+            ticks: {
+              font: {
+                family: 'Inter'
+              }
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            },
+            ticks: {
+              font: {
+                family: 'Inter'
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // Pie Chart
+    const pieCtx = document.getElementById('pieChart');
+    new Chart(pieCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Occupés', 'Libres'],
+        datasets: [{
+          data: [80, 20],
+          backgroundColor: ['#10b981', '#facc15'],
+          borderWidth: 0,
+          hoverOffset: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: {
+          animateRotate: true,
+          animateScale: true
+        },
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: {
+              padding: 20,
+              font: {
+                family: 'Inter'
+              }
+            }
+          }
+        },
+        cutout: '70%'
+      }
+    });
+
+    // Sidebar toggle
+    const menuBar = document.querySelector('nav .bx-menu');
+    const sideBar = document.querySelector('.fixed');
+
+    menuBar.addEventListener('click', () => {
+      sideBar.classList.toggle('-translate-x-full');
+    });
+
+    // Theme toggle
+    const themeBtn = document.querySelector('nav button');
+    const htmlElement = document.documentElement;
+
+    themeBtn.addEventListener('click', () => {
+      htmlElement.classList.toggle('dark');
+      const icon = themeBtn.querySelector('i');
+      icon.classList.toggle('bx-moon');
+      icon.classList.toggle('bx-sun');
+    });
+  </script>
+</body>
+</html>
+  </script>
+
+</body>
+</html>

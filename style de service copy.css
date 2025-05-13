@@ -1,0 +1,134 @@
+/* خلفية متدرجة للحالة العامة */
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg, #512da8, #38bdf8);
+  min-height: 100vh;
+}
+
+/* الشريط الجانبي */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background-color: white;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(to right, #512da8, #38bdf8);
+  color: white;
+  text-decoration: none;
+}
+
+.sidebar-header i {
+  font-size: 24px;
+}
+
+.sidebar-title {
+  margin-left: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  color: #444;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.sidebar-nav a:hover {
+  background-color: #f0f0f0;
+}
+
+.sidebar-nav a i {
+  font-size: 20px;
+}
+
+.sidebar-nav a span {
+  margin-left: 10px;
+}
+
+/* محتوى الصفحة الرئيسي */
+.main {
+  margin-left: 250px;
+  padding: 40px;
+  background-color: #ffffff;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* عنوان الصفحة */
+.header {
+  margin-bottom: 30px;
+}
+
+.header h2 {
+  color: #512da8;
+  font-size: 28px;
+}
+
+/* نموذج إضافة الخدمة */
+.form-container {
+  max-width: 600px;
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  color: #333;
+  font-weight: bold;
+}
+
+form input,
+form textarea {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+form input:focus,
+form textarea:focus {
+  border-color: #512da8;
+  outline: none;
+}
+
+form button {
+  margin-top: 20px;
+  background-color: #512da8;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+form button:hover {
+  background-color: #3b1c91;
+}
